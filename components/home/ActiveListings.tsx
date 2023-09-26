@@ -1,5 +1,7 @@
 import { useListings } from "@/hooks/useListings";
 import Tabs from "@/components/Tabs";
+import Button from "@/components/ui/Button";
+import Link from "next/link";
 import classNames from "classnames";
 
 const tabs = [
@@ -13,9 +15,14 @@ export default function ActiveListings() {
   return (
     <>
       <div className="border-t border-white/10 pt-11">
-        <h2 className="px-4 text-base font-semibold leading-7 text-white sm:px-6 lg:px-8">
-          Active Listings
-        </h2>
+        <div className="flex justify-between pr-16">
+          <h2 className="px-4 text-base font-semibold leading-7 text-white sm:px-6 lg:px-8">
+            Active Listings
+          </h2>
+          <Link href={`/add`}>
+            <Button>Create New Listing</Button>
+          </Link>
+        </div>
         <Tabs tabs={tabs} />
         {listings.loading ? (
           <div>loading...</div>
@@ -77,9 +84,15 @@ export default function ActiveListings() {
                     </td>
                     <td className="hidden py-4 pl-0 pr-4 sm:table-cell sm:pr-8">
                       <div className="flex gap-x-3">
-                        <div className="font-mono text-sm leading-6 text-green-400">
-                          ${listing?.highestBid?.bid_price}
-                        </div>
+                        {listing?.highestBid?.bid_price ? (
+                          <div className="font-mono text-sm leading-6 text-green-400">
+                            ${listing?.highestBid?.bid_price}
+                          </div>
+                        ) : (
+                          <div className="font-mono text-sm leading-6 text-red-400">
+                            No Bids
+                          </div>
+                        )}
                       </div>
                     </td>
                     <td className="py-4 pl-0 pr-4 text-sm leading-6 sm:pr-8 lg:pr-20">
