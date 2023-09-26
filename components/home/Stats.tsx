@@ -13,7 +13,7 @@ interface StatsProps {
 export default function Stats({ stats }: StatsProps) {
   return (
     <>
-      <div className="grid grid-cols-1 bg-gray-700/10 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="grid grid-cols-1 bg-gray-300/10 sm:grid-cols-2 lg:grid-cols-4">
         {stats.map((stat, statIdx) => (
           <div
             key={stat.name}

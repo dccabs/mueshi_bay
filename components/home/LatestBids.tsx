@@ -1,18 +1,24 @@
 import { useBids } from "@/hooks/useBids";
-
-function classNames(...classes) {
-  return classes.filter(Boolean).join(" ");
-}
+import Tabs from "@/components/Tabs";
+import classNames from "classnames";
 
 export default function LatestBids() {
   const bids = useBids();
-  console.log("bids", bids);
+  const tabs = [
+    { name: "Overview", href: "#", current: true },
+    { name: "Activity", href: "#", current: false },
+    { name: "Settings", href: "#", current: false },
+    { name: "Collaborators", href: "#", current: false },
+    { name: "Notifications", href: "#", current: false },
+  ];
+
   return (
     <>
       <div className="border-t border-white/10 pt-11">
         <h2 className="px-4 text-base font-semibold leading-7 text-white sm:px-6 lg:px-8">
           Most Recent Bids
         </h2>
+        <Tabs tabs={tabs} />
         {bids.loading ? (
           <div>loading...</div>
         ) : (
@@ -36,13 +42,13 @@ export default function LatestBids() {
                   scope="col"
                   className="hidden py-2 pl-0 pr-8 font-semibold sm:table-cell"
                 >
-                  Date Listed
+                  Listing
                 </th>
                 <th
                   scope="col"
                   className="py-2 pl-0 pr-4 text-right font-semibold sm:pr-8 sm:text-left lg:pr-20"
                 >
-                  Current Bids
+                  Price
                 </th>
                 <th
                   scope="col"
@@ -59,54 +65,46 @@ export default function LatestBids() {
               </tr>
             </thead>
             <tbody className="divide-y divide-white/5">
-              {bids.data.map((bid) => (
-                <tr key={bid.id}>
-                  <td className="py-4 pl-4 pr-8 sm:pl-6 lg:pl-8">
-                    <div className="flex items-center gap-x-4">
-                      <div className="truncate text-sm font-medium leading-6 text-white">
-                        {bid.name}
+              {bids.data.map((bid) => {
+                const priceClasses = classNames({
+                  "text-green-500": bid.isHighestBid,
+                  "text-gray-400": !bid.isHighestBid,
+                });
+                return (
+                  <tr key={bid.id}>
+                    <td className="py-4 pl-4 pr-8 sm:pl-6 lg:pl-8">
+                      <div className="flex items-center gap-x-4">
+                        <div className="truncate text-sm font-medium leading-6 text-white">
+                          {bid.name}
+                        </div>
+                        {bid.isHighestBid && (
+                          <span className="inline-flex items-center rounded-md bg-green-400/10 px-2 py-1 text-xs font-medium text-green-400 ring-1 ring-inset ring-green-400/20">
+                            Highest Bid
+                          </span>
+                        )}
                       </div>
-                    </div>
-                  </td>
-                  {/*<td className="hidden py-4 pl-0 pr-4 sm:table-cell sm:pr-8">*/}
-                  {/*  <div className="flex gap-x-3">*/}
-                  {/*    <div className="font-mono text-sm leading-6 text-gray-400">*/}
-                  {/*      {item.commit}*/}
-                  {/*    </div>*/}
-                  {/*    <span className="inline-flex items-center rounded-md bg-gray-400/10 px-2 py-1 text-xs font-medium text-gray-400 ring-1 ring-inset ring-gray-400/20">*/}
-                  {/*      {item.branch}*/}
-                  {/*    </span>*/}
-                  {/*  </div>*/}
-                  {/*</td>*/}
-                  {/*<td className="py-4 pl-0 pr-4 text-sm leading-6 sm:pr-8 lg:pr-20">*/}
-                  {/*  <div className="flex items-center justify-end gap-x-2 sm:justify-start">*/}
-                  {/*    <time*/}
-                  {/*      className="text-gray-400 sm:hidden"*/}
-                  {/*      dateTime={item.dateTime}*/}
-                  {/*    >*/}
-                  {/*      {item.date}*/}
-                  {/*    </time>*/}
-                  {/*    <div*/}
-                  {/*      className={classNames(*/}
-                  {/*        statuses[item.status],*/}
-                  {/*        "flex-none rounded-full p-1"*/}
-                  {/*      )}*/}
-                  {/*    >*/}
-                  {/*      <div className="h-1.5 w-1.5 rounded-full bg-current" />*/}
-                  {/*    </div>*/}
-                  {/*    <div className="hidden text-white sm:block">*/}
-                  {/*      {item.status}*/}
-                  {/*    </div>*/}
-                  {/*  </div>*/}
-                  {/*</td>*/}
-                  {/*<td className="hidden py-4 pl-0 pr-8 text-sm leading-6 text-gray-400 md:table-cell lg:pr-20">*/}
-                  {/*  {item.duration}*/}
-                  {/*</td>*/}
-                  {/*<td className="hidden py-4 pl-0 pr-4 text-right text-sm leading-6 text-gray-400 sm:table-cell sm:pr-6 lg:pr-8">*/}
-                  {/*  <time dateTime={item.dateTime}>{item.date}</time>*/}
-                  {/*</td>*/}
-                </tr>
-              ))}
+                    </td>
+                    <td className="hidden py-4 pl-0 pr-4 sm:table-cell sm:pr-8">
+                      <div className="flex gap-x-3">
+                        <div className="font-mono text-sm leading-6 text-gray-400">
+                          {bid.listing_id.name}
+                        </div>
+                      </div>
+                    </td>
+                    <td className="py-4 pl-0 pr-4 text-sm leading-6 sm:pr-8 lg:pr-20">
+                      <div className="flex items-center justify-end gap-x-2 sm:justify-start">
+                        <div className={priceClasses}>${bid.bid_price}</div>
+                      </div>
+                    </td>
+                    {/*<td className="hidden py-4 pl-0 pr-8 text-sm leading-6 text-gray-400 md:table-cell lg:pr-20">*/}
+                    {/*  {item.duration}*/}
+                    {/*</td>*/}
+                    {/*<td className="hidden py-4 pl-0 pr-4 text-right text-sm leading-6 text-gray-400 sm:table-cell sm:pr-6 lg:pr-8">*/}
+                    {/*  <time dateTime={item.dateTime}>{item.date}</time>*/}
+                    {/*</td>*/}
+                  </tr>
+                );
+              })}
             </tbody>
           </table>
         )}
