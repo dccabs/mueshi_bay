@@ -1,16 +1,35 @@
+import { useState } from "react";
 import { useBids } from "@/hooks/useBids";
-import Tabs from "@/components/Tabs";
+import Button from "@/components/ui/Button";
+import Modal from "@/components/ui/Modal";
 import classNames from "classnames";
+import { useSelectBid } from "@/hooks/useSelectBid";
 
 export default function LatestBids() {
+  const [confirmModalOpen, setConfirmModalOpen] = useState(false);
+  const [selectedBid, setSelectedBid] = useState(null);
   const bids = useBids();
-  const tabs = [
-    { name: "Overview", href: "#", current: true },
-    { name: "Activity", href: "#", current: false },
-    { name: "Settings", href: "#", current: false },
-    { name: "Collaborators", href: "#", current: false },
-    { name: "Notifications", href: "#", current: false },
-  ];
+  const selectBidMutation = useSelectBid();
+
+  const handleAccept = () => {
+    if (selectedBid) {
+      const newListing: { id: number } = {
+        id: selectedBid?.id, // or any other status you have
+      };
+
+      selectBidMutation.mutate(
+        { newListing },
+        {
+          onSuccess: () => {
+            setConfirmModalOpen(false);
+          },
+          onError: (error: any) => {
+            console.log("Error deleting listing:", error);
+          },
+        }
+      );
+    }
+  };
 
   return (
     <>
@@ -61,6 +80,12 @@ export default function LatestBids() {
                 >
                   Status
                 </th>
+                <th
+                  scope="col"
+                  className="hidden py-2 pl-0 pr-4 text-right font-semibold sm:table-cell sm:pr-6 lg:pr-8"
+                >
+                  Status
+                </th>
               </tr>
             </thead>
             <tbody className="divide-y divide-white/5">
@@ -95,12 +120,18 @@ export default function LatestBids() {
                         <div className={priceClasses}>${bid.bid_price}</div>
                       </div>
                     </td>
-                    {/*<td className="hidden py-4 pl-0 pr-8 text-sm leading-6 text-gray-400 md:table-cell lg:pr-20">*/}
-                    {/*  {item.duration}*/}
-                    {/*</td>*/}
-                    {/*<td className="hidden py-4 pl-0 pr-4 text-right text-sm leading-6 text-gray-400 sm:table-cell sm:pr-6 lg:pr-8">*/}
-                    {/*  <time dateTime={item.dateTime}>{item.date}</time>*/}
-                    {/*</td>*/}
+                    <td className="hidden py-4 pl-0 pr-8 text-sm leading-6 text-gray-400 md:table-cell lg:pr-20">
+                      {bid.isHighestBid && (
+                        <Button
+                          onClick={() => {
+                            setSelectedBid(bid);
+                            setConfirmModalOpen(true);
+                          }}
+                        >
+                          Accept Bid
+                        </Button>
+                      )}
+                    </td>
                   </tr>
                 );
               })}
@@ -108,6 +139,18 @@ export default function LatestBids() {
           </table>
         )}
       </div>
+      <Modal
+        open={confirmModalOpen}
+        variant="alert"
+        title={`Are you sure you want to accept this bid?`}
+        description="Once this bid is accepted you will no longer be able to reverse that decison."
+        cancelText={"Cancel"}
+        onCancel={() => {
+          setConfirmModalOpen(false);
+        }}
+        confirmText={"Accept Bid"}
+        onConfirm={handleAccept}
+      />
     </>
   );
 }

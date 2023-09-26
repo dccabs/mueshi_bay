@@ -42,8 +42,6 @@ const getListins = async (req: NextApiRequest, res: NextApiResponse) => {
       (bid) => bid.listing_id.id === listing.id
     );
 
-    console.log("filteredData", filteredData);
-
     const highestBid = filteredData.length
       ? filteredData.reduce((prev, current) =>
           Number(prev.bid_price) > Number(current.bid_price) ? prev : current
@@ -55,7 +53,6 @@ const getListins = async (req: NextApiRequest, res: NextApiResponse) => {
   });
 
   const lifetimeSales = soldListings.reduce((prev, current) => {
-    console.log("current", current);
     if (current?.highestBid?.bid_price) {
       return prev + Number(current?.highestBid?.bid_price);
     } else {
