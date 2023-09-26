@@ -1,41 +1,53 @@
+import { useState } from "react";
 import { useListings } from "@/hooks/useListings";
-import Tabs from "@/components/Tabs";
+import { useDeleteListing } from "@/hooks/useDeleteListing";
 import Button from "@/components/ui/Button";
 import Link from "next/link";
 import classNames from "classnames";
-
-const tabs = [
-  { name: "Today", href: "#", current: true },
-  { name: "Last 7 Days", href: "#", current: false },
-  { name: "All Time", href: "#", current: false },
-];
+import Modal from "@/components/ui/Modal";
 
 export default function ActiveListings() {
+  const [selectedListing, setSelectedListing] = useState(null); // [1
+  const [confirmModalOpen, setConfirmModalOpen] = useState(false);
+  const [deleteConfirm, setDeleteConfirm] = useState(false);
   const listings = useListings();
+  const deleteListingMutation = useDeleteListing();
+
+  const handleDelete = () => {
+    if (selectedListing) {
+      const newListing: { id: number } = {
+        id: selectedListing?.id, // or any other status you have
+      };
+
+      deleteListingMutation.mutate(
+        { newListing },
+        {
+          onSuccess: () => {
+            setConfirmModalOpen(false);
+            setDeleteConfirm(true);
+          },
+          onError: (error: any) => {
+            console.log("Error deleting listing:", error);
+          },
+        }
+      );
+    }
+  };
   return (
     <>
       <div className="border-t border-white/10 pt-11">
         <div className="flex justify-between pr-16">
-          <h2 className="px-4 text-base font-semibold leading-7 text-white sm:px-6 lg:px-8">
+          <h2 className="px-4 text-xl font-semibold leading-7 text-white sm:px-6 lg:px-8">
             Active Listings
           </h2>
           <Link href={`/add`}>
             <Button>Create New Listing</Button>
           </Link>
         </div>
-        <Tabs tabs={tabs} />
         {listings.loading ? (
           <div>loading...</div>
         ) : (
           <table className="mt-6 w-full whitespace-nowrap text-left">
-            <colgroup>
-              <col className="lg:w-2/12" />
-              <col className="lg:w-2/12" />
-              <col className="lg:w-2/12" />
-              <col className="lg:w-1/12" />
-              <col className="lg:w-1/12" />
-              <col className="lg:w-1/12" />
-            </colgroup>
             <thead className="border-b border-white/10 text-sm leading-6 text-white">
               <tr>
                 <th
@@ -62,6 +74,10 @@ export default function ActiveListings() {
                 >
                   Status
                 </th>
+                <th
+                  scope="col"
+                  className="hidden py-2 pl-0 pr-4 text-right font-semibold sm:table-cell sm:pr-6"
+                ></th>
               </tr>
             </thead>
             <tbody className="divide-y divide-white/5">
@@ -111,6 +127,22 @@ export default function ActiveListings() {
                         </div>
                       </div>
                     </td>
+                    <td className="py-4 pl-0 pr-4 text-sm leading-6 sm:pr-8 lg:pr-20">
+                      <div className="flex items-center justify-end space-x-4">
+                        <Link href={`/edit/${listing.id}`}>
+                          <Button>Edit</Button>
+                        </Link>
+                        <Button
+                          onClick={() => {
+                            setConfirmModalOpen(true);
+                            setSelectedListing(listing);
+                          }}
+                          variant="alert"
+                        >
+                          Delete
+                        </Button>
+                      </div>
+                    </td>
                   </tr>
                 );
               })}
@@ -118,6 +150,27 @@ export default function ActiveListings() {
           </table>
         )}
       </div>
+      <Modal
+        open={confirmModalOpen}
+        variant="alert"
+        title={`Are you sure you want to delete the listing titled "${selectedListing?.name}"?`}
+        description="By deleting this listing, you will also delete all bids associated with this listing. This action cannot be undone."
+        cancelText={"Cancel"}
+        onCancel={() => setConfirmModalOpen(false)}
+        confirmText={"Delete"}
+        onConfirm={handleDelete}
+        onClose={() => setConfirmModalOpen(false)}
+      />
+      <Modal
+        open={deleteConfirm}
+        title={`You have successfully deleted the listing titled "${selectedListing?.name}`}
+        description="You may now close this modal."
+        cancelText={"Close"}
+        onCancel={() => setDeleteConfirm(false)}
+        confirmText={"Close"}
+        onConfirm={() => setDeleteConfirm(false)}
+        onConfirm={() => setDeleteConfirm(false)}
+      />
     </>
   );
 }

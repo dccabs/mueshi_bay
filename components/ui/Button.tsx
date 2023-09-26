@@ -5,7 +5,7 @@ interface ButtonProps {
   onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
   disabled?: boolean;
   variant?: "primary" | "secondary";
-  type?: "button" | "submit" | "reset";
+  type?: "button" | "submit" | "reset" | "alert";
 }
 export default function Button({
   children,
@@ -18,7 +18,9 @@ export default function Button({
     "rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50":
       variant === "secondary",
     "rounded-md bg-indigo-500 px-2.5 py-1.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500":
-      true,
+      variant === "primary",
+    "rounded-md bg-red-500 px-2.5 py-1.5 text-sm font-semibold text-white shadow-sm hover:bg-red-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-500":
+      variant === "alert",
     "opacity-50 cursor-not-allowed": disabled,
   });
   return (

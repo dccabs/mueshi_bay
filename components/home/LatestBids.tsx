@@ -14,11 +14,10 @@ export default function LatestBids() {
 
   return (
     <>
-      <div className="border-t border-white/10 pt-11">
-        <h2 className="px-4 text-base font-semibold leading-7 text-white sm:px-6 lg:px-8">
+      <div className="border-t border-white/10 pt-11 bg-gray-800 mt-16">
+        <h2 className="px-4 text-xl font-semibold leading-7 text-white sm:px-6 lg:px-8">
           Most Recent Bids
         </h2>
-        <Tabs tabs={tabs} />
         {bids.loading ? (
           <div>loading...</div>
         ) : (
