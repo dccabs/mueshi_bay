@@ -6,6 +6,7 @@ import classNames from "classnames";
 import { useSelectBid } from "@/hooks/useSelectBid";
 
 export default function LatestBids() {
+  const [confirmAcceptModalOpen, setConfirmAcceptModalOpen] = useState(false);
   const [confirmModalOpen, setConfirmModalOpen] = useState(false);
   const [selectedBid, setSelectedBid] = useState(null);
   const bids = useBids();
@@ -22,6 +23,7 @@ export default function LatestBids() {
         {
           onSuccess: () => {
             setConfirmModalOpen(false);
+            setConfirmAcceptModalOpen(true);
           },
           onError: (error: any) => {
             console.log("Error deleting listing:", error);
@@ -71,21 +73,7 @@ export default function LatestBids() {
                 <th
                   scope="col"
                   className="hidden py-2 pl-0 pr-8 font-semibold md:table-cell lg:pr-20"
-                >
-                  Last Bid
-                </th>
-                <th
-                  scope="col"
-                  className="hidden py-2 pl-0 pr-4 text-right font-semibold sm:table-cell sm:pr-6 lg:pr-8"
-                >
-                  Status
-                </th>
-                <th
-                  scope="col"
-                  className="hidden py-2 pl-0 pr-4 text-right font-semibold sm:table-cell sm:pr-6 lg:pr-8"
-                >
-                  Status
-                </th>
+                ></th>
               </tr>
             </thead>
             <tbody className="divide-y divide-white/5">
@@ -121,7 +109,12 @@ export default function LatestBids() {
                       </div>
                     </td>
                     <td className="hidden py-4 pl-0 pr-8 text-sm leading-6 text-gray-400 md:table-cell lg:pr-20">
-                      {bid.isHighestBid && (
+                      {bid.listing_id?.status === "sold" && (
+                        <span className="inline-flex items-center rounded-md bg-red-400/10 px-2 py-1 text-xs font-medium text-red-400 ring-1 ring-inset ring-red-400/20">
+                          Sold
+                        </span>
+                      )}
+                      {bid.listing_id?.status !== "sold" && bid.isHighestBid && (
                         <Button
                           onClick={() => {
                             setSelectedBid(bid);
@@ -150,6 +143,19 @@ export default function LatestBids() {
         }}
         confirmText={"Accept Bid"}
         onConfirm={handleAccept}
+      />
+      <Modal
+        open={confirmAcceptModalOpen}
+        title={`You have successfully accepted the bid!`}
+        description="The bid has been accepted and the listing has been updated"
+        cancelText={"Close"}
+        onCancel={() => {
+          setConfirmAcceptModalOpen(false);
+        }}
+        confirmText={"Done"}
+        onConfirm={() => {
+          setConfirmAcceptModalOpen(false);
+        }}
       />
     </>
   );

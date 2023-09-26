@@ -12,9 +12,11 @@ const getBids = async (req: NextApiRequest, res: NextApiResponse) => {
 
   if (bidsError) return res.status(401).json({ error: bidsError.message });
 
+  const todaysDate = new Date().toISOString().slice(0, 10);
+
   const { data: listingData, error: listingError } = await supabase
     .from("mueshi_listings")
-    .update({ status: "sold" })
+    .update({ status: "sold", sale_date: todaysDate })
     .eq("id", bidsData[0].listing_id)
     .select();
 

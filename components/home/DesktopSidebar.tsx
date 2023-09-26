@@ -9,8 +9,8 @@ import {
 } from "@heroicons/react/24/outline";
 
 const navigation = [
-  { name: "Listings", href: "#", icon: FolderIcon, current: true },
-  { name: "Bids", href: "#", icon: ServerIcon, current: false },
+  { name: "Dashboard", href: "/", icon: GlobeAltIcon, current: true },
+  // { name: "Bids", href: "#", icon: ServerIcon, current: false },
   // { name: "Activity", href: "#", icon: SignalIcon, current: false },
   // { name: "Domains", href: "#", icon: GlobeAltIcon, current: false },
   // { name: "Usage", href: "#", icon: ChartBarSquareIcon, current: false },
