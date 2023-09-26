@@ -6,7 +6,8 @@ const getListins = async (req: NextApiRequest, res: NextApiResponse) => {
 
   const { data: listingsData, error: listingsError } = await supabase
     .from("mueshi_listings")
-    .select("*");
+    .select("*")
+    .order("created_at", { ascending: false });
 
   if (listingsError)
     return res.status(401).json({ error: listingsError.message });
