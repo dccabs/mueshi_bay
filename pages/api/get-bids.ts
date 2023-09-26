@@ -24,11 +24,9 @@ const getBids = async (req: NextApiRequest, res: NextApiResponse) => {
   // Determine the highest bid for each listing and mark them accordingly
   const enhancedData = data.map((bid) => {
     const bidsForThisListing = groupedBids[bid.listing_id.id];
-    console.log("bidsForThisListing", bidsForThisListing);
     const highestBid = Math.max(
       ...bidsForThisListing.map((b) => parseFloat(b.bid_price))
     );
-    console.log("highestBid", highestBid);
     return {
       ...bid,
       isHighestBid: parseFloat(bid.bid_price) === highestBid,

@@ -7,15 +7,23 @@ import Heading from "@/components/home/Heading";
 import Stats from "@/components/home/Stats";
 import ActiveListings from "@/components/home/ActiveListings";
 import LatestBids from "@/components/home/LatestBids";
+import { useStats } from "@/hooks/useStats";
 
 export default function Home() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const stats = [
-    { name: "Number of Active Listings", value: "24" },
-    { name: "Current Bids", value: "15" },
-    { name: "Today's Sales", value: "$300.23" },
-    { name: "LifeTime Sales", value: "$12,000.44" },
-  ];
+  const statsData = useStats();
+
+  const stats = !statsData.loading
+    ? [
+        {
+          name: "Number of Active Listings",
+          value: statsData?.data?.activeListings,
+        },
+        { name: "Current Bids", value: statsData?.data?.bids },
+        { name: "Today's Sales", value: `$${statsData?.data?.lifetimeSales}` },
+        { name: "LifeTime Sales", value: `$${statsData?.data?.lifetimeSales}` },
+      ]
+    : [];
 
   return (
     <>

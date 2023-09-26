@@ -51,15 +51,9 @@ export default function ActiveListings() {
                 </th>
                 <th
                   scope="col"
-                  className="hidden py-2 pl-0 pr-4 text-right font-semibold sm:table-cell sm:pr-6 lg:pr-8"
+                  className="hidden py-2 pl-0 pr-4 text-right font-semibold sm:table-cell sm:pr-6"
                 >
                   Status
-                </th>
-                <th
-                  scope="col"
-                  className="hidden py-2 pl-0 pr-4 text-right font-semibold sm:table-cell sm:pr-6 lg:pr-8"
-                >
-                  Time
                 </th>
               </tr>
             </thead>
@@ -69,7 +63,7 @@ export default function ActiveListings() {
                   "hidden py-4 pl-0 pr-4 text-right text-sm leading-6 sm:table-cell sm:pr-6 lg:pr-8 capitalize":
                     true,
                   "text-green-400": listing.status === "active",
-                  "text-red-400": listing.status === "expired",
+                  "text-red-400": listing.status === "sold",
                   "text-gray-400": listing.status === "inactive",
                 });
                 return (
@@ -93,7 +87,17 @@ export default function ActiveListings() {
                         {listing.bids.length}
                       </div>
                     </td>
-                    <td className={statusClasses}>{listing.status}</td>
+                    <td className={statusClasses}>
+                      <div className="flex justify-end items-center">
+                        <div className="h-2 w-2 rounded-full bg-current mr-2" />
+                        <div className="space-x-2">
+                          <span>{listing.status}</span>
+                          {listing?.sale_date && (
+                            <span>{listing.sale_date}</span>
+                          )}
+                        </div>
+                      </div>
+                    </td>
                   </tr>
                 );
               })}
