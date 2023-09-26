@@ -6,7 +6,8 @@ const getBids = async (req: NextApiRequest, res: NextApiResponse) => {
 
   const { data, error } = await supabase
     .from("mueshi_bids")
-    .select("*, listing_id(*)");
+    .select("*, listing_id(*)")
+    .order("created_at", { ascending: false });
 
   if (error) return res.status(401).json({ error: error.message });
 

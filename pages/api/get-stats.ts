@@ -53,7 +53,7 @@ const getListins = async (req: NextApiRequest, res: NextApiResponse) => {
   });
 
   const lifetimeSales = soldListings.reduce(
-    (prev, current) => prev + Number(current.price),
+    (prev, current) => prev + Number(current.highestBid.bid_price),
     0
   );
 
