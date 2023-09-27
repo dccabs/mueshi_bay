@@ -10,6 +10,7 @@ import LatestBids from "@/components/home/LatestBids";
 import { useStats } from "@/hooks/useStats";
 
 export default function Home() {
+  const [searchQuery, setSearchQuery] = useState("");
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const statsData = useStats();
 
@@ -25,6 +26,10 @@ export default function Home() {
       ]
     : [];
 
+  const searchQueryChange = (e) => {
+    setSearchQuery(e.target.value);
+  };
+
   return (
     <>
       <div>
@@ -35,7 +40,10 @@ export default function Home() {
         <DesktopSidebar />
 
         <div className="xl:pl-72">
-          <SearchHeader setSidebarOpen={setSidebarOpen} />
+          <SearchHeader
+            searchQueryChange={searchQueryChange}
+            setSidebarOpen={setSidebarOpen}
+          />
           <main>
             <header>
               {/*<SecondaryNavigation />*/}
@@ -43,8 +51,8 @@ export default function Home() {
               <Stats stats={stats} />
             </header>
             <div className="">
-              <ActiveListings />
-              <LatestBids />
+              <ActiveListings searchQuery={searchQuery} />
+              <LatestBids searchQuery={searchQuery} />
             </div>
           </main>
         </div>

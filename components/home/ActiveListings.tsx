@@ -6,12 +6,24 @@ import Link from "next/link";
 import classNames from "classnames";
 import Modal from "@/components/ui/Modal";
 
-export default function ActiveListings() {
+interface ActiveListingsProps {
+  searchQuery?: string;
+}
+
+export default function ActiveListings({
+  searchQuery = "",
+}: ActiveListingsProps) {
   const [selectedListing, setSelectedListing] = useState(null); // [1
   const [confirmModalOpen, setConfirmModalOpen] = useState(false);
   const [deleteConfirm, setDeleteConfirm] = useState(false);
   const listings = useListings();
   const deleteListingMutation = useDeleteListing();
+  const filteredListings =
+    !listings.loading &&
+    listings.data.filter((listing) => {
+      if (!searchQuery) return true;
+      return listing.name.toLowerCase().includes(searchQuery.toLowerCase());
+    });
 
   const handleDelete = () => {
     if (selectedListing) {
@@ -81,7 +93,7 @@ export default function ActiveListings() {
               </tr>
             </thead>
             <tbody className="divide-y divide-white/5">
-              {listings.data.map((listing) => {
+              {filteredListings?.map((listing) => {
                 const statusClasses = classNames({
                   "hidden py-4 pl-0 pr-4 text-right text-sm leading-6 sm:table-cell sm:pr-6 lg:pr-8 capitalize":
                     true,

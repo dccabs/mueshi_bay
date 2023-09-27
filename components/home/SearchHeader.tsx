@@ -1,9 +1,13 @@
 import { Bars3Icon, MagnifyingGlassIcon } from "@heroicons/react/20/solid";
 
 interface SearchHeaderProps {
+  searchQueryChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   setSidebarOpen: (open: boolean) => void;
 }
-export default function SearchHeader({ setSidebarOpen }: SearchHeaderProps) {
+export default function SearchHeader({
+  setSidebarOpen,
+  searchQueryChange,
+}: SearchHeaderProps) {
   return (
     <>
       {/* Sticky search header */}
@@ -28,6 +32,7 @@ export default function SearchHeader({ setSidebarOpen }: SearchHeaderProps) {
                 aria-hidden="true"
               />
               <input
+                onChange={searchQueryChange}
                 id="search-field"
                 className="block h-full w-full border-0 bg-transparent py-0 pl-8 pr-0 text-white focus:ring-0 sm:text-sm"
                 placeholder="Search..."

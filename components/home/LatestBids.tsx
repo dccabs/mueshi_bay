@@ -6,12 +6,25 @@ import Modal from "@/components/ui/Modal";
 import classNames from "classnames";
 import { useSelectBid } from "@/hooks/useSelectBid";
 
-export default function LatestBids() {
+interface LatestBidsProps {
+  searchQuery?: string;
+}
+
+export default function LatestBids({ searchQuery = "" }: LatestBidsProps) {
   const [confirmAcceptModalOpen, setConfirmAcceptModalOpen] = useState(false);
   const [confirmModalOpen, setConfirmModalOpen] = useState(false);
   const [selectedBid, setSelectedBid] = useState(null);
   const bids = useBids();
   const selectBidMutation = useSelectBid();
+
+  const filteredBids =
+    !bids.loading &&
+    bids.data.filter((bid) => {
+      if (!searchQuery) return true;
+      return bid.listing_id.name
+        .toLowerCase()
+        .includes(searchQuery.toLowerCase());
+    });
 
   const handleAccept = () => {
     if (selectedBid) {
@@ -83,7 +96,7 @@ export default function LatestBids() {
               </tr>
             </thead>
             <tbody className="divide-y divide-white/5">
-              {bids.data.map((bid) => {
+              {filteredBids.map((bid) => {
                 const priceClasses = classNames({
                   "text-green-500": bid.isHighestBid,
                   "text-gray-400": !bid.isHighestBid,
