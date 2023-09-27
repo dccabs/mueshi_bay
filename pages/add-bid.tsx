@@ -114,8 +114,8 @@ export default function Add() {
       </div>
       <Modal
         open={confirmModalOpen}
-        title="Congrats! You added a new listing!"
-        description="You can now view your listing in the dashboard."
+        title="Congrats! You added a new bid!"
+        description="You can now view your bid in the dashboard."
         cancelText={"Close"}
         onCancel={() => setConfirmModalOpen(false)}
         confirmText={"View Dashboard"}
