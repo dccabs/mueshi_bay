@@ -7,7 +7,8 @@ const getListins = async (req: NextApiRequest, res: NextApiResponse) => {
 
   const { count: listingCount, error: activeLisingsError } = await supabase
     .from("mueshi_listings")
-    .select("*", { count: "exact", status: "active" });
+    .select("*", { count: "exact", status: "active" })
+    .eq("status", "active");
 
   if (activeLisingsError)
     return res.status(401).json({ error: activeLisingsError.message });
