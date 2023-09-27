@@ -26,7 +26,6 @@ export default function Add() {
   };
 
   const handleSubmit = (e) => {
-    console.log("submitting");
     e.preventDefault();
     const newListing = {
       name: formData.name,
@@ -37,7 +36,6 @@ export default function Add() {
       { newListing },
       {
         onSuccess: () => {
-          console.log("Listing added successfully");
           setConfirmModalOpen(true);
         },
         onError: (error) => {

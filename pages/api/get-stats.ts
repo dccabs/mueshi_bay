@@ -72,13 +72,13 @@ const getListins = async (req: NextApiRequest, res: NextApiResponse) => {
         end: today,
       })
     ) {
-      if (current?.highestBid?.listing_id?.price) {
-        return acc + Number(current.highestBid.listing_id.price);
+      if (current?.highestBid?.bid_price) {
+        return acc + Number(current.highestBid.bid_price);
       } else {
-        return acc;
+        return acc + 0;
       }
     } else {
-      return acc;
+      return acc + 0;
     }
   }, 0);
 

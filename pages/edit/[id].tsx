@@ -40,7 +40,6 @@ export default function Edit() {
   };
 
   const handleSubmit = (e) => {
-    console.log("submitting");
     e.preventDefault();
     const newListing = {
       id: listing.data.id,
@@ -52,7 +51,6 @@ export default function Edit() {
       { newListing },
       {
         onSuccess: () => {
-          console.log("Listing added successfully");
           setConfirmModalOpen(true);
         },
         onError: (error) => {

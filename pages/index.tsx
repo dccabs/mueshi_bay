@@ -20,7 +20,7 @@ export default function Home() {
           value: statsData?.data?.activeListings,
         },
         { name: "Current Bids", value: statsData?.data?.bids },
-        { name: "Today's Sales", value: `$${statsData?.data?.lifetimeSales}` },
+        { name: "Today's Sales", value: `$${statsData?.data?.todaysSales}` },
         { name: "LifeTime Sales", value: `$${statsData?.data?.lifetimeSales}` },
       ]
     : [];
