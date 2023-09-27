@@ -33,7 +33,7 @@ export default function Edit() {
       });
       setInit(true);
     }
-  }, [listing]);
+  }, [listing, init]);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });

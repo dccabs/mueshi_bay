@@ -181,7 +181,6 @@ export default function ActiveListings({
         onCancel={() => setDeleteConfirm(false)}
         confirmText={"Close"}
         onConfirm={() => setDeleteConfirm(false)}
-        onConfirm={() => setDeleteConfirm(false)}
       />
     </>
   );
